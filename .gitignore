@@ -1,3 +1,4 @@
 .env
 discord.log
 push.txt
+__pycache__/
