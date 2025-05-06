@@ -32,7 +32,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
 @bot.command()
-async def member_join(ctx, user: str):
+async def member_join_date(ctx, user: str):
     if ctx.guild:
         for member in ctx.guild.members:
             if member.name == user:
