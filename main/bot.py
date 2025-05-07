@@ -12,6 +12,7 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 intents = discord.Intents.all()
 
 bot = commands.Bot(command_prefix='$', intents=intents)
+bot.remove_command('help')
 
 
 @bot.event
@@ -40,15 +41,40 @@ async def member_join_date(ctx, user: str):
                 await ctx.send(f"{member.name} joined on {formatted_date}")
                 return
         await ctx.send("User not found.")
-                
 
+@bot.command()
+async def newest_member(ctx):
+    if ctx.guild:
+        newest = None
+        for member in ctx.guild.members:
+            if newest is None or (member.joined_at and member.joined_at > newest.joined_at):
+                newest = member
+        if newest:
+            await ctx.send(f"The newest member is {newest.name}, who joined on {newest.joined_at.strftime('%Y-%m-%d %H:%M:%S')}.")
+        else:
+            await ctx.send("Could not determine the newest member.")
+    else:
+        await ctx.send("This command can only be used in a server.")
+
+@bot.command() # !Add more to this help command.
+async def help(ctx, arg: str = None):
+    if arg is None:
+        await ctx.send("Please provide a valid argurment.")
+    if arg == "commands":
+        if not bot.commands:
+            await ctx.send("No commands found.")
+        else:        
+            for command in bot.commands:
+                await ctx.send(command.name)
+
+        
 
 @bot.command()   
 async def purge(ctx, arg: str = None):
     if arg is None:
         await ctx.send('Please provide a valid number of messages to purge. OR use "all" to purge all messages in the channel.')
     if arg == 'all':
-        await ctx.send('Purging curent channel message...')
+        await ctx.send('Purging curent channel messages...')
         await ctx.channel.purge()
     if arg.isdigit():
         await ctx.send(f'Purging {arg} messages...')
