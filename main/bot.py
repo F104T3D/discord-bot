@@ -56,7 +56,7 @@ async def newest_member(ctx):
     else:
         await ctx.send("This command can only be used in a server.")
 
-@bot.command() # !Add more to this help command.
+@bot.command() # !Add more to this help command. :P
 async def help(ctx, arg: str = None):
     if arg is None:
         await ctx.send("Please provide a valid argurment.")
