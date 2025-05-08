@@ -67,7 +67,6 @@ async def help(ctx, arg: str = None):
             for command in bot.commands:
                 await ctx.send(command.name)
 
-        
 
 @bot.command()   
 async def purge(ctx, arg: str = None):
@@ -80,6 +79,14 @@ async def purge(ctx, arg: str = None):
         await ctx.send(f'Purging {arg} messages...')
         await ctx.channel.purge(limit=int(arg))
 
+@bot.command() # There's probably a better way to do this lol
+async def members(ctx):
+    memb_count = 0
+    if ctx.guild:
+        for member in ctx.guild.members:
+            memb_count+=1
+    await ctx.send(f"There are a total of {memb_count} members in this server!")
+            
 
 @bot.event
 async def on_ready():
