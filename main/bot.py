@@ -1,9 +1,10 @@
 import discord
-from discord.ext import commands
 import os
 import logging
 from dotenv import load_dotenv
-from utility.constants import innappropriate_words
+from discord.ext import commands
+from utility.constants import INAPPROPRRIATE_WORDS, FUNNY_WORDS, WELCOME_CHANNEL, LOGGING_CHANNEL
+
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -14,10 +15,14 @@ intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='$', intents=intents)
 bot.remove_command('help')
 
+@bot.event
+async def on_message_delete(message):
+    channel = bot.get_channel(1371756918216851538)
+    await channel.send(f"**[Deleted]** {message.author}: {message.content} in {message.channel}")
 
 @bot.event
 async def on_member_join(member):
-    channel = member.guild.get_channel(1368097954090450976)
+    channel = member.guild.get_channel(WELCOME_CHANNEL)
     if channel:
         await channel.send(f'Welcome to the server, {member.mention}!')
 
@@ -25,8 +30,11 @@ async def on_member_join(member):
 async def on_message(message):
     if message.author == bot.user:
         return
+    
+    if message.content.lower() in FUNNY_WORDS[0]: # !Add more to this 
+        await message.channel.send("gurt: yo")
 
-    if message.content.lower() in innappropriate_words:
+    if message.content.lower() in INAPPROPRRIATE_WORDS:
         await message.delete()
         await message.channel.send(f'{message.author.mention}, your message contained inappropriate content and has been deleted.')
     
@@ -69,7 +77,7 @@ async def help(ctx, arg: str = None):
 
 
 @bot.command()   
-async def purge(ctx, arg: str = None):
+async def clear(ctx, arg: str = None):
     if arg is None:
         await ctx.send('Please provide a valid number of messages to purge. OR use "all" to purge all messages in the channel.')
     if arg == 'all':
