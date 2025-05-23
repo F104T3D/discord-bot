@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from utility.constants import INAPPROPRRIATE_WORDS, FUNNY_WORDS, WELCOME_CHANNEL, LOGGING_CHANNEL
 
-
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
