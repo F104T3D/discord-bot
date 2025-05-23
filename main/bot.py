@@ -17,8 +17,9 @@ bot.remove_command('help')
 
 @bot.event
 async def on_message_delete(message):
-    channel = bot.get_channel(1371756918216851538)
-    await channel.send(f"**[Deleted]** {message.author}: {message.content} in {message.channel}")
+    channel = bot.get_channel(LOGGING_CHANNEL)
+    if channel:
+        await channel.send(f"**[Deleted]** {message.author}: {message.content} in {message.channel}")
 
 @bot.event
 async def on_member_join(member):
@@ -94,10 +95,23 @@ async def members(ctx):
         for member in ctx.guild.members:
             memb_count+=1
     await ctx.send(f"There are a total of {memb_count} members in this server!")
-            
+
+@bot.command()
+async def member_info(ctx, arg):
+    for member in ctx.guild.members:
+        if arg == member.name:
+            await ctx.send(f"{member.name} User info:\nrole(s) - {member.roles}\nID - {member.id}\navatar - {member.avatar}")
+
+@bot.command()
+async def echo(ctx, channel_id: int, *, message: str):
+    channel = bot.get_channel(channel_id)
+    if channel:
+        await channel.send(message)
+
 
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
+
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
